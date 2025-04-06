@@ -5,7 +5,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-driver.get("https://www.google.com/")
 driver.get("http://uitestingplayground.com/dynamicid")
 button = driver.find_element(By.CSS_SELECTOR, "button.btn.btn-primary")
 button.click()

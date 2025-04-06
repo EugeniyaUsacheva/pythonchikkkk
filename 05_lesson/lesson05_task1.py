@@ -5,10 +5,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-driver.get("https://www.google.com/")
 driver.get("http://uitestingplayground.com/classattr")
 button = driver.find_element(By.CLASS_NAME, "btn-primary")
 button.click()
 
 sleep(5)
-
