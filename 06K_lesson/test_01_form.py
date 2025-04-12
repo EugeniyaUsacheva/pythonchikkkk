@@ -8,13 +8,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException
 from webdriver_manager.chrome import ChromeDriverManager
 
-import pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-
 # Фикстура для запуска и завершения драйвера
 @pytest.fixture
 def driver():
@@ -26,7 +19,7 @@ def driver():
 
 # Функция для получения цвета фона элемента
 def get_background_color(driver, field_name):
-    element = driver.find_element(By.NAME, field_name)
+    element = driver.find_element(By.ID, field_name)
     return element.value_of_css_property("background-color")
 
 # Тест на заполнение формы
@@ -51,7 +44,7 @@ def test_fill_form(driver):
 
     # zip должно быть красным
     zip_code_color = get_background_color(driver, "zip-code")
-    assert "rgb(132, 32, 41)" in zip_code_color, "Zip code не подсвечен красным"
+    assert "rgba(248, 215, 218, 1)" in zip_code_color, "Zip code не подсвечен красным"
 
     # Остальные поля должны быть зелеными
     green_fields = [
@@ -61,4 +54,4 @@ def test_fill_form(driver):
 
     for field in green_fields:
         color = get_background_color(driver, field)
-        assert "rgb(15, 81, 50)" in color, f"Поле {field} не подсвечено зелёным"
+        assert "rgba(209, 231, 221, 1)" in color, f"Поле {field} не подсвечено зелёным"

@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 @pytest.fixture
 def driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Убрать, если нужен визуальный браузер
+    options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     yield driver
     driver.quit()
@@ -16,7 +16,7 @@ def test_slow_calculator(driver):
     driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
 
     # Установить задержку в 45 секунд
-    delay_input = driver.find_element(By.NAME, "delay")
+    delay_input = driver.find_element(By.ID, "delay")
     delay_input.clear()
     delay_input.send_keys("45")
 
@@ -31,4 +31,4 @@ def test_slow_calculator(driver):
         EC.text_to_be_present_in_element((By.CLASS_NAME, "screen"), "15")
     )
 
-    assert result, "Ожидалось значение 15, но оно не появилось"
+    assert result, "15"
