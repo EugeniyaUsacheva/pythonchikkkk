@@ -23,15 +23,16 @@ def test_checkout_process(browser):
     browser.find_element(By.ID, "login-button").click()
 
     # Добавляем товары в корзину
-    browser.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
+
+    wait.until(EC.element_to_be_clickable((By.ID, "add-to-cart-sauce-labs-backpack"))).click()
     browser.find_element(By.ID, "add-to-cart-sauce-labs-bolt-t-shirt").click()
     browser.find_element(By.ID, "add-to-cart-sauce-labs-onesie").click()
 
     # Переходим в корзину
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a.shopping_cart_link"))).click()
+    browser.find_element(By.CSS_SELECTOR, "a.shopping_cart_link").click()
 
     # Нажимаем Checkout
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "checkout"))).click()
+    wait.until(EC.element_to_be_clickable((By.ID, "checkout"))).click()
 
     # Заполняем форму
     wait.until(EC.presence_of_element_located((By.ID, "first-name"))).send_keys("Женя")
