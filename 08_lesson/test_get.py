@@ -1,83 +1,77 @@
 import requests
 
-base_url = "https://ru.yougile.com/api-v2/projects"
+url = "https://ru.yougile.com/api-v2/projects"
 token = "kmyp0O4SWpnY0ec3J+390o617naNk0cQ1Xf0+MrT23FfgwSFdEcBvrR653lAp9oH"
-project_id = "415d5be0-1407-4400-9e8a-ebbfe78280c7"
-invalid_project_id = "00000000-0000-0000-0000-000000000000"
-invalid_token = "invalid_token_example"
+invalid_token = "invalid_token_for_testing"
 
 
-# Функция для получения проекта по ID
-def get_project_by_id(project_id, token):
+# Функция для создания проекта
+def create_project(title, token):
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
+    project_data = {
+        "title": title
+    }
 
-    get_url = f"{base_url}/{project_id}"
+    response = requests.post(url, headers=headers, json=project_data)
 
-    response = requests.get(get_url, headers=headers)
+    if response.status_code == 201:
+        return response.json()
+    else:
+        raise Exception(
+            f"Ошибка создания проекта: {response.status_code}, {response.text}"
+        )
 
-    return response
 
-
-# Позитивный тест для получения проекта по ID
-def test_get_project_positive():
+# Позитивный тест для создания проекта
+def test_create_project():
+    project_title = "Мой проект"
     try:
-        response = get_project_by_id(project_id, token)
+        project = create_project(project_title, token)
+        assert "id" in project, (
+            "Ожидалось поле 'id' в ответе, но оно отсутствует"
+        )
+        print(f"Проект '{project_title}' создан успешно с ID: {project['id']}")
+    except Exception as e:
+        print(f"Ошибка при создании проекта: {e}")
 
-        print(f"Ответ от сервера на GET-запрос: {response.status_code} - {response.text}")
 
-        assert response.status_code == 200, f"Ожидался статус 200, но получен {response.status_code}"
+# Негативный тест для создания проекта с неправильным токеном
+def test_create_project_negative():
+    project_title = "Мой проект"
+    try:
+        response = requests.post(
+            url,
+            headers={
+                "Authorization": f"Bearer {invalid_token}",
+                "Content-Type": "application/json"
+            },
+            json={"title": project_title}
+        )
 
-        project_details = response.json()
-        print(f"Детали проекта: {project_details}")
+        assert response.status_code != 201, (
+            f"Ожидалось, что статус код не будет 201, но получен "
+            f"{response.status_code}"
+        )
 
-        assert "id" in project_details, "Проект не содержит поля 'id'"
-        print(f"Проект с ID '{project_details['id']}' получен успешно.")
+        assert response.status_code in [401, 403], (
+            f"Ожидался статус 401 или 403, но получен {response.status_code}"
+        )
+        print(
+            f"Негативный тест прошел успешно. Получен статус код: "
+            f"{response.status_code}"
+        )
 
     except Exception as e:
-        print(f"Ошибка при получении проекта: {e}")
-
-
-# Негативный тест для получения проекта с несуществующим ID
-def test_get_project_negative_not_found():
-    try:
-        response = get_project_by_id(invalid_project_id, token)
-
-        print(f"Ответ от сервера на запрос с несуществующим ID: {response.status_code} - {response.text}")
-
-        assert response.status_code == 404, f"Ожидался статус 404, но получен {response.status_code}"
-
-        print(f"Проект с ID '{invalid_project_id}' не найден. Негативный тест прошел успешно.")
-
-    except Exception as e:
-        print(f"Ошибка при выполнении негативного теста: {e}")
-
-
-# Негативный тест для получения проекта с невалидным токеном
-def test_get_project_negative_invalid_token():
-    try:
-        response = get_project_by_id(project_id, invalid_token)
-
-        print(f"Ответ от сервера на запрос с невалидным токеном: {response.status_code} - {response.text}")
-
-        assert response.status_code == 401, f"Ожидался статус 401, но получен {response.status_code}"
-
-        print(f"Токен невалиден. Негативный тест прошел успешно.")
-
-    except Exception as e:
-        print(f"Ошибка при выполнении негативного теста: {e}")
+        print(f"Ошибка в негативном тесте: {e}")
 
 
 # Основная функция
 def main():
-    print("Запуск позитивного теста:")
-    test_get_project_positive()
-
-    print("\nЗапуск негативных тестов:")
-    test_get_project_negative_not_found()
-    test_get_project_negative_invalid_token()
+    test_create_project()  # Позитивный тест
+    test_create_project_negative()  # Негативный тест
 
 
 # Запуск основного процесса

@@ -21,7 +21,10 @@ def create_project(title, token):
     if response.status_code == 201:
         return response.json()
     else:
-        raise Exception(f"Ошибка создания проекта: {response.status_code}, {response.text}")
+        raise Exception(
+            f"Ошибка создания проекта: {response.status_code}, "
+            f"{response.text}"
+        )
 
 
 # Позитивный тест для создания проекта
@@ -29,7 +32,9 @@ def test_create_project():
     project_title = "Мой проект"
     try:
         project = create_project(project_title, token)
-        assert "id" in project, "Ожидалось поле 'id' в ответе, но оно отсутствует"
+        assert "id" in project, (
+            "Ожидалось поле 'id' в ответе, но оно отсутствует"
+        )
         print(f"Проект '{project_title}' создан успешно с ID: {project['id']}")
     except Exception as e:
         print(f"Ошибка при создании проекта: {e}")
@@ -44,10 +49,18 @@ def test_create_project_negative():
             "Content-Type": "application/json"
         }, json={"title": project_title})
 
-        assert response.status_code != 201, f"Ожидалось, что статус код не будет 201, но получен {response.status_code}"
+        assert response.status_code != 201, (
+            f"Ожидалось, что статус код не будет 201, но получен "
+            f"{response.status_code}"
+        )
 
-        assert response.status_code in [401, 403], f"Ожидался статус 401 или 403, но получен {response.status_code}"
-        print(f"Негативный тест прошел успешно. Получен статус код: {response.status_code}")
+        assert response.status_code in [401, 403], (
+            f"Ожидался статус 401 или 403, но получен {response.status_code}"
+        )
+        print(
+            f"Негативный тест прошел успешно. Получен статус код: "
+            f"{response.status_code}"
+        )
 
     except Exception as e:
         print(f"Ошибка в негативном тесте: {e}")

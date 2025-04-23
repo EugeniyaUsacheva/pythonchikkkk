@@ -35,24 +35,35 @@ def get_project(project_id, token):
 
     return response
 
+
 # Позитивный тест для изменения проекта
 def test_update_project_positive():
     new_project_title = "Измененный проект"
     try:
         response = update_project(project_id, new_project_title, token)
 
-        print(f"Ответ от сервера на PUT-запрос: {response.status_code} - {response.text}")
+        print(
+            f"Ответ от сервера на PUT-запрос: {response.status_code} - "
+            f"{response.text}"
+        )
 
-        assert response.status_code == 200, f"Ожидался статус 200, но получен {response.status_code}"
+        assert response.status_code == 200, (
+            f"Ожидался статус 200, но получен {response.status_code}"
+        )
 
         project_details_response = get_project(project_id, token)
 
         print(
-            f"Ответ от сервера на GET-запрос: {project_details_response.status_code} - {project_details_response.text}")
+            "Ответ от сервера на GET-запрос: "
+            f"{project_details_response.status_code} - "
+            f"{project_details_response.text}"
+        )
 
         project_details = project_details_response.json()
-        assert project_details[
-                   "title"] == new_project_title, f"Ожидалось, что имя проекта будет '{new_project_title}', но получено '{project_details['title']}'"
+        assert project_details["title"] == new_project_title, (
+            f"Ожидалось, что имя проекта будет '{new_project_title}', "
+            f"но получено '{project_details['title']}'"
+        )
 
         print(f"Проект успешно изменен на: {project_details['title']}")
 
@@ -68,9 +79,14 @@ def test_update_project_negative():
 
         print(f"Ответ от сервера: {response.status_code} - {response.text}")
 
-        assert response.status_code == 404, f"Ожидался статус 404, но получен {response.status_code}"
+        assert response.status_code == 404, (
+            f"Ожидался статус 404, но получен {response.status_code}"
+        )
 
-        print(f"Проект с ID '{invalid_project_id}' не найден. Негативный тест прошел успешно.")
+        print(
+            f"Проект с ID '{invalid_project_id}' не найден. "
+            "Негативный тест прошел успешно."
+        )
 
     except Exception as e:
         print(f"Ошибка при выполнении негативного теста: {e}")
